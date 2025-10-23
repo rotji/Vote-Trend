@@ -1,0 +1,6 @@
+.roundedSm { border-radius: 0.25rem; }
+.rounded { border-radius: 0.5rem; }
+.roundedLg { border-radius: 1rem; }
+
+.border { border: 1px solid #d1d5db; }
+.borderNone { border: none; }

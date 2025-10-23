@@ -1,0 +1,8 @@
+.bgPrimary { background-color: var(--primary-color); }
+.bgSecondary { background-color: var(--secondary-color); }
+.bgLight { background-color: #f8f9fa; }
+.bgDark { background-color: #111827; }
+
+.textPrimary { color: var(--primary-color); }
+.textGray { color: #6b7280; }
+.textWhite { color: #ffffff; }

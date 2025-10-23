@@ -1,0 +1,11 @@
+.flex { display: flex; }
+.grid { display: grid; }
+.inlineFlex { display: inline-flex; }
+
+.justifyCenter { justify-content: center; }
+.justifyBetween { justify-content: space-between; }
+.itemsCenter { align-items: center; }
+
+.gridCols2 { grid-template-columns: repeat(2, 1fr); }
+.gridCols3 { grid-template-columns: repeat(3, 1fr); }
+.gridCols4 { grid-template-columns: repeat(4, 1fr); }

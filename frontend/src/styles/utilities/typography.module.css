@@ -1,0 +1,11 @@
+.textSm { font-size: 0.875rem; }
+.textBase { font-size: 1rem; }
+.textLg { font-size: 1.125rem; }
+.textXl { font-size: 1.25rem; }
+
+.fontLight { font-weight: 300; }
+.fontMedium { font-weight: 500; }
+.fontBold { font-weight: 700; }
+
+.textCenter { text-align: center; }
+.textRight { text-align: right; }
