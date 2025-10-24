@@ -1,0 +1,93 @@
+/* Results page: animated bar chart, live stats, share button */
+.resultsBg {
+  min-height: 100vh;
+  width: 100vw;
+  background: linear-gradient(120deg, #f7f8fa 60%, #e0e7ff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 1s;
+}
+.resultsContainer {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(44, 34, 84, 0.13);
+  padding: 2.5rem 2rem 2rem 2rem;
+  min-width: 340px;
+  max-width: 420px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  animation: fadeIn 1.2s;
+}
+.title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+.totalVotes {
+  color: #444;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.2rem;
+}
+.chartSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+.barRow {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.optionLabel {
+  min-width: 80px;
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+.barBg {
+  flex: 1;
+  background: #f3f4f6;
+  border-radius: 0.7rem;
+  height: 1.3rem;
+  position: relative;
+  overflow: hidden;
+  margin-right: 0.7rem;
+}
+.barFill {
+  height: 100%;
+  border-radius: 0.7rem;
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+.percent {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #2563eb;
+  min-width: 2.5rem;
+  text-align: right;
+}
+.shareBtn {
+  margin-top: 1.2rem;
+  font-size: 1.1rem;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 600px) {
+  .resultsContainer {
+    min-width: 90vw;
+    max-width: 98vw;
+    padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+  }
+  .title {
+    font-size: 1.1rem;
+  }
+}
