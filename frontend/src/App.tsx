@@ -6,6 +6,11 @@ import PollList from './pages/PollList';
 import PollDetails from './pages/PollDetails';
 import Login from './pages/Login';
 import NotFound from './components/NotFound';
+import Landing from './pages/Landing';
+import Auth from './pages/Auth';
+import SubmitTopic from './pages/SubmitTopic';
+import Results from './pages/Results';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (
@@ -13,10 +18,15 @@ function App() {
       <Navbar />
       <div style={{ padding: '2rem', textAlign: 'center', minHeight: '70vh', color: '#222', background: 'transparent' }}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Landing />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/polls" element={<PollList />} />
           <Route path="/polls/:id" element={<PollDetails />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/submit-topic" element={<SubmitTopic />} />
+          <Route path="/results" element={<Results />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
