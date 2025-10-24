@@ -1,0 +1,17 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
+export const {
+  POSTGRES_HOST,
+  POSTGRES_PORT,
+  POSTGRES_DB,
+  POSTGRES_USER,
+  POSTGRES_PASSWORD,
+  MONGODB_URI,
+  CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
+  JWT_SECRET,
+  PORT,
+  NODE_ENV,
+} = process.env;
