@@ -84,6 +84,43 @@
   color: #fff;
   border-color: var(--accent-color);
 }
+
+.pollsLink {
+  color: #fff;
+  background: transparent;
+  border: 2px solid #fff;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.pollsLink:hover {
+  background: var(--accent-color);
+  color: #fff;
+  border-color: var(--accent-color);
+}
+
+.submitLink {
+  color: #fff;
+  background: #10b981;
+  border: 2px solid #10b981;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.submitLink:hover {
+  background: #059669;
+  border-color: #059669;
+}
 .loginBtn, .walletBtn {
   background: transparent;
   color: #fff;

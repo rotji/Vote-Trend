@@ -4,7 +4,8 @@
   "main": "src/app.ts",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev --respawn src/app.ts",
+    "dev": "ts-node-dev --respawn src/app-temp.ts",
+    "dev-db": "ts-node-dev --respawn src/app.ts",
     "build": "tsc",
     "start": "node dist/app.js"
   },

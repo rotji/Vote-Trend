@@ -8,6 +8,19 @@ const pool = new Pool({
   database: process.env.POSTGRES_DB,
   user: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
+  ssl: process.env.POSTGRES_SSL === 'true' ? { rejectUnauthorized: false } : false,
+  connectionTimeoutMillis: 10000,
+  idleTimeoutMillis: 30000,
+  max: 20,
+});
+
+// Test connection on startup
+pool.on('connect', () => {
+  console.log('PostgreSQL client connected');
+});
+
+pool.on('error', (err) => {
+  console.error('PostgreSQL connection error:', err);
 });
 
 export default pool;

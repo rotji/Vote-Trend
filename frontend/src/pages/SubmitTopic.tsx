@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Button from '../components/Button';
 import styles from '../styles/components/submitTopic.module.css';
+import { createPoll } from '../api/pollApi';
 
 const categories = [
   'Sports',
@@ -13,13 +14,13 @@ const categories = [
 ];
 
 const SubmitTopic: React.FC = () => {
-  const [title, setTitle] = useState('');
   const [category, setCategory] = useState(categories[0]);
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [options, setOptions] = useState(['', '']);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
   const handleOptionChange = (idx: number, value: string) => {
     setOptions((opts) => opts.map((opt, i) => (i === idx ? value : opt)));
@@ -32,34 +33,56 @@ const SubmitTopic: React.FC = () => {
     if (e.target.files && e.target.files[0]) setImage(e.target.files[0]);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    setError('');
+    setSuccess(false);
+
+    // Validation
+    if (!description || options.filter(opt => opt.trim()).length < 2) {
+      setError('Please fill in the poll question and provide at least 2 options.');
       setLoading(false);
+      return;
+    }
+
+    try {
+      // Get current user from localStorage
+      const userStr = localStorage.getItem('user');
+      if (!userStr) {
+        setError('Please log in to create a poll.');
+        setLoading(false);
+        return;
+      }
+      
+      const user = JSON.parse(userStr);
+      
+      // Create poll via API
+      await createPoll({
+        title: description, // Use description as title
+        category,
+        description,
+        creator_id: user.id,
+        options: options.filter(opt => opt.trim()),
+      });
+
+      // Reset form on success
       setSuccess(true);
-      setTitle('');
       setCategory(categories[0]);
       setDescription('');
       setImage(null);
       setOptions(['', '']);
-    }, 1500);
+    } catch (err: any) {
+      setError(err.message || 'Failed to create poll. Please try again.');
+    }
+    
+    setLoading(false);
   };
 
   return (
     <div className={styles.submitBg}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <h2 className={styles.heading}>Submit a New Poll Topic</h2>
-        <div className={styles.inputGroup}>
-          <input
-            className={styles.input}
-            placeholder=" "
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-          <label className={styles.label}>Title</label>
-        </div>
         <div className={styles.inputGroup}>
           <select
             className={styles.input}
@@ -82,7 +105,7 @@ const SubmitTopic: React.FC = () => {
             rows={3}
             required
           />
-          <label className={styles.label}>Description</label>
+          <label className={styles.label}>Poll Question</label>
         </div>
         <div className={styles.inputGroup}>
           <input
@@ -119,6 +142,7 @@ const SubmitTopic: React.FC = () => {
         <Button variant="primary" type="submit" disabled={loading}>
           {loading ? 'Submitting...' : 'Submit'}
         </Button>
+        {error && <div className={styles.errorMsg}>❌ {error}</div>}
         {success && <div className={styles.successMsg}>✅ Poll submitted successfully!</div>}
       </form>
     </div>

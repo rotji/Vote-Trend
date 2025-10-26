@@ -10,10 +10,12 @@ const Navbar: React.FC = () => {
       <div className={styles.spacer} />
       <div className={styles.actions}>
         <Link to="/home" className={styles.homeLink}>Home</Link>
+        <Link to="/polls" className={styles.pollsLink}>Polls</Link>
+        <Link to="/submit-topic" className={styles.submitLink}>Create Poll</Link>
         <Link to="/admin" className={styles.adminLink}>Admin</Link>
-  <Link to="/login" className={styles.loginBtn}>Login</Link>
-  <Link to="/signup" className={styles.signupBtn}>Sign Up</Link>
-  <button className={styles.walletBtn}>Connect Wallet</button>
+        <Link to="/login" className={styles.loginBtn}>Login</Link>
+        <Link to="/signup" className={styles.signupBtn}>Sign Up</Link>
+        <button className={styles.walletBtn}>Connect Wallet</button>
       </div>
     </nav>
   );
