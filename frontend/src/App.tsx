@@ -11,6 +11,7 @@ import Auth from './pages/Auth';
 import SubmitTopic from './pages/SubmitTopic';
 import Results from './pages/Results';
 import AdminDashboard from './pages/AdminDashboard';
+import SignUp from './pages/SignUp';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/polls" element={<PollList />} />
           <Route path="/polls/:id" element={<PollDetails />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/submit-topic" element={<SubmitTopic />} />
           <Route path="/results" element={<Results />} />

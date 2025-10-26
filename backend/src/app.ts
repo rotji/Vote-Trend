@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import pollRoutes from './routes/pollRoutes';
 import userRoutes from './routes/userRoutes';
 import voteRoutes from './routes/voteRoutes';
@@ -14,6 +15,11 @@ const PORT = process.env.PORT || 4000;
 connectMongo();
 pool.connect().then(() => console.log('PostgreSQL connected')).catch(console.error);
 
+// Middleware
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 
 // API Routes

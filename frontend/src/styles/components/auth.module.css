@@ -8,6 +8,71 @@
   justify-content: center;
   animation: bgFade 1.5s;
 }
+
+/* Auth form container */
+.authForm {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(44, 34, 84, 0.18);
+  padding: 2.5rem 2rem;
+  min-width: 340px;
+  max-width: 370px;
+  width: 100%;
+  animation: fadeIn 1s;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* Form heading */
+.heading {
+  text-align: center;
+  color: #6c2eb7;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+/* Submit button */
+.submitBtn {
+  background: #6c2eb7;
+  color: #fff;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.submitBtn:hover:not(:disabled) {
+  background: #2563eb;
+}
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Error message */
+.error {
+  color: #d32f2f;
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+/* Success message for registration */
+.success {
+  color: #388e3c;
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+/* Navigation link to login */
+.switchAuth {
+  margin-top: 18px;
+  font-size: 0.95rem;
+  text-align: center;
+}
 @keyframes bgFade {
   from { opacity: 0; }
   to { opacity: 1; }

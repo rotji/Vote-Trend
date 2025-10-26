@@ -92,6 +92,7 @@ const SubmitTopic: React.FC = () => {
             onChange={handleImage}
           />
           <label className={styles.label}>Upload Image</label>
+          {image && <div className={styles.fileName}>Selected: {image.name}</div>}
         </div>
         <div className={styles.optionsSection}>
           <label className={styles.optionsLabel}>Options</label>

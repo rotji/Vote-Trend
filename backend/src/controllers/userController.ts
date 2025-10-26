@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
-    const result = await pool.query('SELECT id, email, name, role, created_at FROM users');
+    const result = await pool.query('SELECT id, email, name, role, created_at FROM users ORDER BY created_at DESC');
     res.json(result.rows);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch users' });
@@ -29,9 +29,9 @@ export const registerUser = async (req: Request, res: Response) => {
       'INSERT INTO users (email, password, name, role, created_at) VALUES ($1, $2, $3, $4, NOW()) RETURNING id, email, name, role, created_at',
       [email, hashedPassword, name, 'user']
     );
-    res.status(201).json(result.rows[0]);
+    res.status(201).json({ user: result.rows[0], message: 'User registered successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to register user' });
+  res.status(500).json({ error: 'Failed to register user', details: (error instanceof Error ? error.message : '') });
   }
 };
 

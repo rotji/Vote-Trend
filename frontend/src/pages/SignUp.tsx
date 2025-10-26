@@ -1,10 +1,11 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/components/auth.module.css';
-import { loginUser } from '../api/userApi';
+import { registerUser } from '../api/userApi';
 
-const Login: React.FC = () => {
-  const [form, setForm] = useState({ email: '', password: '' });
+const SignUp: React.FC = () => {
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -19,19 +20,17 @@ const Login: React.FC = () => {
     setError('');
     setSuccess('');
     // Basic validation
-    if (!form.email || !form.password) {
+    if (!form.name || !form.email || !form.password) {
       setError('All fields are required.');
       return;
     }
     setLoading(true);
     try {
-      const user = await loginUser(form.email, form.password);
-      setSuccess('Login successful! Redirecting...');
-      // Store user data in localStorage or context
-      localStorage.setItem('user', JSON.stringify(user));
-      setTimeout(() => navigate('/home'), 1500);
+      await registerUser(form.name, form.email, form.password);
+      setSuccess('Registration successful! Redirecting to login...');
+      setTimeout(() => navigate('/login'), 1500);
     } catch (err: any) {
-      setError(err.message || 'Login failed.');
+      setError(err.message || 'Registration failed.');
     }
     setLoading(false);
   };
@@ -39,7 +38,16 @@ const Login: React.FC = () => {
   return (
     <div className={styles.authBg}>
       <form className={styles.authForm} onSubmit={handleSubmit}>
-        <h2 className={styles.heading}>Login</h2>
+        <h2 className={styles.heading}>Sign Up</h2>
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={form.name}
+          onChange={handleChange}
+          className={styles.input}
+          required
+        />
         <input
           type="email"
           name="email"
@@ -61,12 +69,12 @@ const Login: React.FC = () => {
         {error && <div className={styles.error}>{error}</div>}
         {success && <div className={styles.success}>{success}</div>}
         <button type="submit" className={styles.submitBtn} disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? 'Signing Up...' : 'Sign Up'}
         </button>
         <div className={styles.switchAuth}>
-          Don't have an account?{' '}
-          <span style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => navigate('/signup')}>
-            Sign Up
+          Already have an account?{' '}
+          <span style={{ color: '#007bff', cursor: 'pointer' }} onClick={() => navigate('/login')}>
+            Login
           </span>
         </div>
       </form>
@@ -74,4 +82,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default SignUp;
