@@ -42,6 +42,75 @@
   justify-content: center;
   margin-bottom: 2rem;
 }
+
+.primaryBtn {
+  background: #2563eb;
+  color: #fff;
+  padding: 0.8rem 2rem;
+  border-radius: 0.8rem;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s;
+  border: 2px solid #2563eb;
+}
+
+.primaryBtn:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.secondaryBtn {
+  background: #10b981;
+  color: #fff;
+  padding: 0.8rem 2rem;
+  border-radius: 0.8rem;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s;
+  border: 2px solid #10b981;
+}
+
+.secondaryBtn:hover {
+  background: #059669;
+  border-color: #059669;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.noPollsMessage {
+  text-align: center;
+  padding: 2rem;
+  color: #fff;
+}
+
+.noPollsMessage p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.createFirstPoll {
+  background: #10b981;
+  color: #fff;
+  padding: 0.8rem 2rem;
+  border-radius: 0.8rem;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s;
+  border: 2px solid #10b981;
+}
+
+.createFirstPoll:hover {
+  background: #059669;
+  border-color: #059669;
+}
 .carouselSection {
   background: rgba(255,255,255,0.08);
   border-radius: 2rem;

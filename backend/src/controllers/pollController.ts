@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import pool from '../config/db/postgres';
+import pool, { executeQuery } from '../config/db/postgres';
 
 export const getAllPolls = async (req: Request, res: Response) => {
   try {
@@ -7,9 +7,8 @@ export const getAllPolls = async (req: Request, res: Response) => {
       SELECT p.*, u.name as creator_name 
       FROM polls p 
       JOIN users u ON p.creator_id = u.id 
-      WHERE p.status = $1 
       ORDER BY p.created_at DESC
-    `, ['approved']);
+    `);
     
     const polls = pollsResult.rows;
     
@@ -24,6 +23,7 @@ export const getAllPolls = async (req: Request, res: Response) => {
     
     res.json(polls);
   } catch (error) {
+    console.error('Error fetching polls:', error);
     res.status(500).json({ error: 'Failed to fetch polls' });
   }
 };
@@ -42,7 +42,7 @@ export const createPoll = async (req: Request, res: Response) => {
     // Insert poll
     const pollResult = await client.query(
       'INSERT INTO polls (title, category, description, creator_id, status, created_at) VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *',
-      [title, category, description, creator_id, 'pending']
+      [title, category, description, creator_id, 'approved']
     );
     
     const poll = pollResult.rows[0];
@@ -107,36 +107,45 @@ export const getPollById = async (req: Request, res: Response) => {
 export const voteOnPoll = async (req: Request, res: Response) => {
   const pollId = req.params.id;
   const { user_id, option_id } = req.body;
+  
+  console.log(`🗳️  Vote request: Poll ${pollId}, User ${user_id}, Option ${option_id}`);
+  
   if (!user_id || !option_id) {
     return res.status(400).json({ error: 'Missing user_id or option_id' });
   }
   
-  const client = await pool.connect();
+  let client;
   try {
+    client = await pool.connect();
     await client.query('BEGIN');
     
-    // Check if poll exists and is approved
-    const pollResult = await client.query('SELECT * FROM polls WHERE id = $1 AND status = $2', [pollId, 'approved']);
+    // Check if poll exists
+    const pollResult = await client.query('SELECT * FROM polls WHERE id = $1', [pollId]);
     if (pollResult.rows.length === 0) {
-      return res.status(404).json({ error: 'Poll not found or not approved' });
+      await client.query('ROLLBACK');
+      return res.status(404).json({ error: 'Poll not found' });
     }
     
     // Check if user already voted
     const voteResult = await client.query('SELECT * FROM votes WHERE poll_id = $1 AND user_id = $2', [pollId, user_id]);
     if (voteResult.rows.length > 0) {
+      await client.query('ROLLBACK');
       return res.status(400).json({ error: 'User has already voted' });
     }
     
-    // Verify option belongs to this poll
+    // Verify option belongs to this poll and get option text
     const optionResult = await client.query('SELECT * FROM poll_options WHERE id = $1 AND poll_id = $2', [option_id, pollId]);
     if (optionResult.rows.length === 0) {
+      await client.query('ROLLBACK');
       return res.status(400).json({ error: 'Invalid option for this poll' });
     }
     
-    // Insert vote
+    const optionText = optionResult.rows[0].option_text;
+    
+    // Insert vote with both option_id and option text
     const insertResult = await client.query(
-      'INSERT INTO votes (poll_id, user_id, option_id, created_at) VALUES ($1, $2, $3, NOW()) RETURNING *',
-      [pollId, user_id, option_id]
+      'INSERT INTO votes (poll_id, user_id, option_id, option, created_at) VALUES ($1, $2, $3, $4, NOW()) RETURNING *',
+      [pollId, user_id, option_id, optionText]
     );
     
     // Update vote count
@@ -146,11 +155,24 @@ export const voteOnPoll = async (req: Request, res: Response) => {
     );
     
     await client.query('COMMIT');
+    console.log('✅ Vote cast successfully');
     res.status(201).json({ vote: insertResult.rows[0], message: 'Vote cast successfully' });
   } catch (error) {
-    await client.query('ROLLBACK');
-    res.status(500).json({ error: 'Failed to cast vote' });
+    console.error('❌ Vote casting error:', error);
+    if (client) {
+      try {
+        await client.query('ROLLBACK');
+      } catch (rollbackError) {
+        console.error('❌ Rollback error:', rollbackError);
+      }
+    }
+    res.status(500).json({ 
+      error: 'Failed to cast vote',
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : '') : 'Database connection issue'
+    });
   } finally {
-    client.release();
+    if (client) {
+      client.release();
+    }
   }
 };

@@ -105,9 +105,6 @@ const HeroVote: React.FC = () => {
     <div className={styles.heroVoteBg}>
       <div className={styles.topicBox}>
         <h1 className={styles.topicStatement}>{currentPoll.title}</h1>
-        {currentPoll.description && (
-          <p className={styles.topicDescription}>{currentPoll.description}</p>
-        )}
         <div className={styles.imageBox}>
           <img 
             src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"

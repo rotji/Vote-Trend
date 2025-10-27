@@ -137,11 +137,6 @@ const PollList: React.FC = () => {
                   {/* Poll Statement/Title at Top - Like Home Page */}
                   <h2 className={styles.pollStatement}>{poll.title}</h2>
                   
-                  {/* Poll Description */}
-                  {poll.description && (
-                    <p className={styles.pollDescription}>{poll.description}</p>
-                  )}
-                  
                   {/* Image Container - Like Home Page */}
                   <div className={styles.pollImageContainer}>
                     <img 

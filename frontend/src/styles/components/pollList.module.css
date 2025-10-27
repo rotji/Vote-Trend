@@ -84,13 +84,13 @@
 .pollCard {
   background: linear-gradient(135deg, #6c2eb7 0%, #2563eb 100%);
   border-radius: 1.5rem;
-  padding: 2rem;
+  padding: 1.2rem;
   color: #fff;
   box-shadow: 0 8px 32px rgba(108, 46, 183, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  min-height: 500px;
-  min-width: 400px;
-  max-width: 400px;
+  min-height: 300px;
+  min-width: 300px;
+  max-width: 300px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -104,33 +104,25 @@
 
 /* Poll Statement - Like Hero Vote */
 .pollStatement {
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  line-height: 1.4;
-  margin-bottom: 1rem;
+  line-height: 1.2;
+  margin-bottom: 0.4rem;
   text-align: center;
   color: #fff;
-}
-
-.pollDescription {
-  font-size: 1rem;
-  opacity: 0.9;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  line-height: 1.5;
 }
 
 /* Image Container - Like Hero Vote */
 .pollImageContainer {
   display: flex;
   justify-content: center;
-  margin: 1.5rem 0;
+  margin: 0.4rem 0 0.8rem 0;
 }
 
 .pollImage {
-  width: 280px;
-  height: 180px;
-  border-radius: 1rem;
+  width: 180px;
+  height: 110px;
+  border-radius: 0.8rem;
   object-fit: cover;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
@@ -139,8 +131,8 @@
 .voteStats {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin: 1.5rem 0;
+  gap: 0.6rem;
+  margin: 0.8rem 0;
 }
 
 .voteItem {
@@ -151,15 +143,15 @@
 .voteButton {
   background: rgba(255, 255, 255, 0.1);
   border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 0.8rem;
-  padding: 1rem 1.5rem;
+  border-radius: 0.6rem;
+  padding: 0.6rem 1rem;
   color: #fff;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  min-width: 250px;
+  gap: 0.6rem;
+  min-width: 170px;
   backdrop-filter: blur(10px);
 }
 
@@ -176,13 +168,13 @@
 }
 
 .voteCount {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #fff;
 }
 
 .voteLabel {
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 500;
 }
 
@@ -191,21 +183,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
-  padding-top: 1rem;
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .category {
   background: rgba(255, 255, 255, 0.2);
-  padding: 0.4rem 0.8rem;
-  border-radius: 1rem;
-  font-size: 0.9rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
 }
 
 .totalVotes {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   opacity: 0.8;
 }
 
@@ -240,24 +232,24 @@
   }
   
   .pollCard {
-    padding: 1.5rem;
-    min-height: 400px;
-    min-width: 320px;
-    max-width: 320px;
+    padding: 1.2rem;
+    min-height: 300px;
+    min-width: 280px;
+    max-width: 280px;
   }
   
   .pollStatement {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   
   .pollImage {
-    width: 240px;
-    height: 150px;
+    width: 180px;
+    height: 120px;
   }
   
   .voteButton {
-    min-width: 200px;
-    padding: 0.8rem 1.2rem;
+    min-width: 160px;
+    padding: 0.7rem 1rem;
   }
   
   .navArrow {
