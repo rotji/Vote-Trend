@@ -1,0 +1,179 @@
+/* Cloudinary Upload Component Styles */
+
+.uploadContainer {
+  margin-bottom: 1.5rem;
+}
+
+.uploadLabel {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.dropZone {
+  position: relative;
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  background: #f9fafb;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dropZone:hover {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.fileInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.uploadPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.uploadIcon {
+  width: 3rem;
+  height: 3rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.uploadText {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.uploadSubtext {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.uploadLimits {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-top: 0.5rem;
+}
+
+.uploadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: #3b82f6;
+}
+
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.imagePreview {
+  position: relative;
+  display: inline-block;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f3f4f6;
+  border: 2px solid #e5e7eb;
+}
+
+.previewImage {
+  width: 100%;
+  max-width: 300px;
+  max-height: 200px;
+  object-fit: contain;
+  background-color: #f8f9fa;
+  display: block;
+}
+
+.imageActions {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+.removeButton {
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.removeButton:hover {
+  background: rgba(239, 68, 68, 1);
+  transform: scale(1.1);
+}
+
+.errorMessage {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: #dc2626;
+  font-size: 0.875rem;
+}
+
+.helpText {
+  margin-top: 1rem;
+  padding: 0.875rem;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  color: #0369a1;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dropZone {
+    padding: 1.5rem 1rem;
+  }
+  
+  .uploadIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  .uploadText {
+    font-size: 0.9rem;
+  }
+  
+  .previewImage {
+    max-width: 250px;
+    max-height: 160px;
+  }
+}

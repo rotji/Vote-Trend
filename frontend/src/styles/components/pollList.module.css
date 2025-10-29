@@ -123,8 +123,42 @@
   width: 180px;
   height: 110px;
   border-radius: 0.8rem;
-  object-fit: cover;
+  object-fit: contain;
+  background-color: #f8f9fa;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Multiple images layout for polls */
+.pollMultipleImages {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  width: 180px;
+}
+
+.pollImageItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pollCandidateImage {
+  width: 100%;
+  height: 50px;
+  object-fit: contain;
+  background-color: #f8f9fa;
+  border-radius: 0.6rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(108, 46, 183, 0.2);
+}
+
+.pollCandidateName {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #6c2eb7;
+  margin-top: 0.2rem;
+  text-align: center;
+  line-height: 1.1;
 }
 
 /* Vote Stats - Like Hero Vote */

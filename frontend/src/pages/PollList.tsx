@@ -9,12 +9,21 @@ interface PollOption {
   vote_count: number;
 }
 
+interface PollImage {
+  id: number;
+  image_url: string;
+  image_description: string;
+  display_order: number;
+}
+
 interface Poll {
   id: number;
   title: string;
   category: string;
   description: string;
   options: PollOption[];
+  images?: PollImage[];
+  main_image_url?: string;
   creator_id: number;
   created_at: string;
 }
@@ -84,6 +93,19 @@ const PollList: React.FC = () => {
     return poll.options.reduce((total, option) => total + option.vote_count, 0);
   };
 
+  // Get all images for display (up to 4 for good layout)
+  const getDisplayImages = (poll: Poll) => {
+    if (poll.images && poll.images.length > 0) {
+      // Sort by display_order and take up to 4 images
+      const sortedImages = [...poll.images].sort((a, b) => a.display_order - b.display_order);
+      return sortedImages.slice(0, 4);
+    }
+    if (poll.main_image_url) {
+      return [{ id: 0, image_url: poll.main_image_url, image_description: poll.title, display_order: 1 }];
+    }
+    return [{ id: 0, image_url: `https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80`, image_description: 'Poll image', display_order: 1 }];
+  };
+
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({ left: -300, behavior: 'smooth' });
@@ -139,11 +161,46 @@ const PollList: React.FC = () => {
                   
                   {/* Image Container - Like Home Page */}
                   <div className={styles.pollImageContainer}>
-                    <img 
-                      src={`https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80`}
-                      alt={poll.title}
-                      className={styles.pollImage}
-                    />
+                    {(() => {
+                      const displayImages = getDisplayImages(poll);
+                      
+                      if (displayImages.length === 1) {
+                        // Single image - full width
+                        return (
+                          <img 
+                            src={displayImages[0].image_url}
+                            alt={displayImages[0].image_description || poll.title}
+                            className={styles.pollImage}
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = `https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80`;
+                            }}
+                          />
+                        );
+                      } else {
+                        // Multiple images - grid layout
+                        return (
+                          <div className={styles.pollMultipleImages}>
+                            {displayImages.map((image, index) => (
+                              <div key={image.id || index} className={styles.pollImageItem}>
+                                <img 
+                                  src={image.image_url}
+                                  alt={image.image_description || `Candidate ${index + 1}`} 
+                                  className={styles.pollCandidateImage} 
+                                  onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.src = `https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80`;
+                                  }}
+                                />
+                                {image.image_description && (
+                                  <span className={styles.pollCandidateName}>{image.image_description}</span>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                    })()}
                   </div>
 
                   {/* Vote Options with Counts - Like Home Page */}

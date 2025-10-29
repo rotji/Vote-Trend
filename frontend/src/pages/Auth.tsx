@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../styles/components/auth.module.css';
 import Button from '../components/Button';
+import { buildGoogleIconUrl } from '../constants/urls';
 
 const Auth: React.FC = () => {
   const [tab, setTab] = useState<'login' | 'register' | 'wallet'>('login');
@@ -27,7 +28,7 @@ const Auth: React.FC = () => {
               <Button variant="primary" type="submit">Login</Button>
               <div className={styles.socialRow}>
                 <button type="button" className={styles.socialBtn}>
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google" className={styles.socialIcon} />
+                  <img src={buildGoogleIconUrl('google')} alt="Google" className={styles.socialIcon} />
                   Google
                 </button>
               </div>
@@ -50,7 +51,7 @@ const Auth: React.FC = () => {
               <Button variant="primary" type="submit">Register</Button>
               <div className={styles.socialRow}>
                 <button type="button" className={styles.socialBtn}>
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google" className={styles.socialIcon} />
+                  <img src={buildGoogleIconUrl('google')} alt="Google" className={styles.socialIcon} />
                   Google
                 </button>
               </div>

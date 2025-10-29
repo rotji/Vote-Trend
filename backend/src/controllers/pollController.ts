@@ -1,51 +1,64 @@
 import { Request, Response } from 'express';
 import pool, { executeQuery } from '../config/db/postgres';
+import { validatePollData, validateVoteData, sanitizePollData } from '../utils/validation';
+import { asyncHandler, NotFoundError, ValidationError, DatabaseError } from '../middleware/errorHandler';
 
-export const getAllPolls = async (req: Request, res: Response) => {
-  try {
-    const pollsResult = await pool.query(`
-      SELECT p.*, u.name as creator_name 
-      FROM polls p 
-      JOIN users u ON p.creator_id = u.id 
-      ORDER BY p.created_at DESC
-    `);
+export const getAllPolls = asyncHandler(async (req: Request, res: Response) => {
+  const pollsResult = await pool.query(`
+    SELECT p.*, u.name as creator_name 
+    FROM polls p 
+    JOIN users u ON p.creator_id = u.id 
+    ORDER BY p.created_at DESC
+  `);
+  
+  const polls = pollsResult.rows;
+  
+  // Get options and images for each poll
+  for (let poll of polls) {
+    // Get poll options
+    const optionsResult = await pool.query(
+      'SELECT id, option_text, vote_count FROM poll_options WHERE poll_id = $1 ORDER BY id',
+      [poll.id]
+    );
+    poll.options = optionsResult.rows;
     
-    const polls = pollsResult.rows;
+    // Get poll images
+    const imagesResult = await pool.query(
+      'SELECT id, image_url, image_description, display_order FROM poll_images WHERE poll_id = $1 ORDER BY display_order, id',
+      [poll.id]
+    );
+    poll.images = imagesResult.rows;
     
-    // Get options for each poll
-    for (let poll of polls) {
-      const optionsResult = await pool.query(
-        'SELECT id, option_text, vote_count FROM poll_options WHERE poll_id = $1 ORDER BY id',
-        [poll.id]
-      );
-      poll.options = optionsResult.rows;
-    }
-    
-    res.json(polls);
-  } catch (error) {
-    console.error('Error fetching polls:', error);
-    res.status(500).json({ error: 'Failed to fetch polls' });
+    console.log(`📊 Poll ${poll.id}: ${poll.options.length} options, ${poll.images.length} images`);
   }
-};
+  
+  res.json(polls);
+});
 
-export const createPoll = async (req: Request, res: Response) => {
-  const { title, category, description, creator_id, options } = req.body;
-  if (!title || !category || !description || !creator_id) {
-    return res.status(400).json({ error: 'Missing required fields' });
+export const createPoll = asyncHandler(async (req: Request, res: Response) => {
+  // Validate input data
+  const validation = validatePollData(req.body);
+  if (!validation.isValid) {
+    throw new ValidationError(`Validation failed: ${validation.errors.join(', ')}`);
   }
+
+  // Sanitize input data
+  const sanitizedData = sanitizePollData(req.body);
+  const { title, category, description, creator_id, options, images, image_url } = sanitizedData;
   
   let client;
   try {
     client = await pool.connect();
     await client.query('BEGIN');
     
-    // Insert poll
+    // Insert poll (without image_url for now, we'll use the poll_images table)
     const pollResult = await client.query(
       'INSERT INTO polls (title, category, description, creator_id, status, created_at) VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING *',
       [title, category, description, creator_id, 'approved']
     );
     
     const poll = pollResult.rows[0];
+    console.log('✅ Poll created with ID:', poll.id);
     
     // Insert options if provided
     if (options && Array.isArray(options)) {
@@ -55,25 +68,52 @@ export const createPoll = async (req: Request, res: Response) => {
           [poll.id, option.trim()]
         );
       }
+      console.log('✅ Poll options inserted');
+    }
+    
+    // Insert multiple images if provided
+    if (images && Array.isArray(images) && images.length > 0) {
+      for (let i = 0; i < images.length; i++) {
+        const image = images[i];
+        if (image.url) {
+          await client.query(
+            'INSERT INTO poll_images (poll_id, image_url, image_description, display_order) VALUES ($1, $2, $3, $4)',
+            [poll.id, image.url, image.description || '', i + 1]
+          );
+        }
+      }
+      console.log(`✅ ${images.length} images inserted for poll ${poll.id}`);
+    }
+    
+    // Fallback: Insert single image_url if no multiple images (backward compatibility)
+    if (image_url && (!images || images.length === 0)) {
+      await client.query(
+        'INSERT INTO poll_images (poll_id, image_url, image_description, display_order) VALUES ($1, $2, $3, $4)',
+        [poll.id, image_url, 'Main poll image', 1]
+      );
+      console.log('✅ Single image inserted for poll');
     }
     
     await client.query('COMMIT');
-    res.status(201).json({ poll, message: 'Poll created successfully and pending approval' });
+    console.log('✅ Transaction committed successfully');
+    
+    res.status(201).json({ 
+      poll, 
+      message: 'Poll created successfully',
+      images: images || []
+    });
   } catch (error) {
     if (client) {
       await client.query('ROLLBACK');
     }
-    console.error('Poll creation error:', error);
-    res.status(500).json({ 
-      error: 'Failed to create poll', 
-      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : '') : 'Database connection issue'
-    });
+    console.error('❌ Poll creation error:', error);
+    throw new DatabaseError('Failed to create poll in database');
   } finally {
     if (client) {
       client.release();
     }
   }
-};
+});
 
 export const getPollById = async (req: Request, res: Response) => {
   const pollId = req.params.id;
@@ -106,13 +146,19 @@ export const getPollById = async (req: Request, res: Response) => {
 
 export const voteOnPoll = async (req: Request, res: Response) => {
   const pollId = req.params.id;
+  
+  // Validate input data
+  const validation = validateVoteData(req.body);
+  if (!validation.isValid) {
+    return res.status(400).json({ 
+      error: 'Validation failed', 
+      details: validation.errors 
+    });
+  }
+  
   const { user_id, option_id } = req.body;
   
   console.log(`🗳️  Vote request: Poll ${pollId}, User ${user_id}, Option ${option_id}`);
-  
-  if (!user_id || !option_id) {
-    return res.status(400).json({ error: 'Missing user_id or option_id' });
-  }
   
   let client;
   try {

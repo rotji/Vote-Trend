@@ -1,3 +1,5 @@
+import { apiCall } from '../utils/api';
+
 // API functions for poll operations
 export const createPoll = async (pollData: {
   title: string;
@@ -5,53 +7,29 @@ export const createPoll = async (pollData: {
   description: string;
   creator_id: number;
   options?: string[];
+  images?: Array<{ url: string; description?: string }>;
+  image_url?: string | null; // Legacy support
 }) => {
-  const res = await fetch('/api/polls', {
+  return await apiCall('/api/polls', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(pollData),
   });
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error || 'Failed to create poll');
-  }
-  return await res.json();
 };
 
 export const getAllPolls = async () => {
-  const res = await fetch('/api/polls');
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error || 'Failed to fetch polls');
-  }
-  return await res.json();
+  return await apiCall('/api/polls');
 };
 
 export const getPollById = async (pollId: string) => {
-  const res = await fetch(`/api/polls/${pollId}`);
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error || 'Failed to fetch poll');
-  }
-  return await res.json();
+  return await apiCall(`/api/polls/${pollId}`);
 };
 
 export const voteOnPoll = async (pollId: string, voteData: {
   user_id: number;
   option_id: number;
 }) => {
-  const res = await fetch(`/api/polls/${pollId}/vote`, {
+  return await apiCall(`/api/polls/${pollId}/vote`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify(voteData),
   });
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error || 'Failed to vote');
-  }
-  return await res.json();
 };

@@ -10,12 +10,21 @@ interface PollOption {
   vote_count: number;
 }
 
+interface PollImage {
+  id: number;
+  image_url: string;
+  image_description: string;
+  display_order: number;
+}
+
 interface Poll {
   id: number;
   title: string;
   category: string;
   description: string;
   options: PollOption[];
+  images?: PollImage[];
+  main_image_url?: string;
   creator_id: number;
   created_at: string;
 }
@@ -44,6 +53,20 @@ const Landing: React.FC = () => {
     return poll.options.reduce((total, option) => total + option.vote_count, 0);
   };
 
+  // Get the main image URL for landing page (show first image only for simplicity)
+  const getMainImageUrl = (poll: Poll) => {
+    if (poll.images && poll.images.length > 0) {
+      // Sort by display_order and take the first image
+      const sortedImages = [...poll.images].sort((a, b) => a.display_order - b.display_order);
+      return sortedImages[0].image_url;
+    }
+    if (poll.main_image_url) {
+      return poll.main_image_url;
+    }
+    // Fallback to a generic landscape image
+    return "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80";
+  };
+
   return (
     <div className={styles.landingBg}>
       <section className={styles.heroSection}>
@@ -68,9 +91,14 @@ const Landing: React.FC = () => {
             {polls.map((poll) => (
               <Card key={poll.id} className={styles.pollCard}>
                 <img 
-                  src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
+                  src={getMainImageUrl(poll)}
                   alt={poll.title} 
-                  className={styles.pollImage} 
+                  className={styles.pollImage}
+                  onError={(e) => {
+                    // Fallback to placeholder if image fails to load
+                    const target = e.target as HTMLImageElement;
+                    target.src = "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80";
+                  }} 
                 />
                 <div className={styles.pollInfo}>
                   <span className={styles.pollCategory}>{poll.category}</span>

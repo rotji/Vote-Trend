@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { getAllPolls, voteOnPoll } from '../api/pollApi';
+import { EXTERNAL_URLS } from '../constants/urls';
 import styles from '../styles/components/heroVote.module.css';
 
 interface PollOption {
@@ -9,17 +10,26 @@ interface PollOption {
   vote_count: number;
 }
 
+interface PollImage {
+  id: number;
+  image_url: string;
+  image_description: string;
+  display_order: number;
+}
+
 interface Poll {
   id: number;
   title: string;
   category: string;
   description: string;
   options: PollOption[];
+  images?: PollImage[];
+  main_image_url?: string;
   creator_id: number;
   created_at: string;
 }
 
-const HeroVote: React.FC = () => {
+const HeroVote: React.FC = React.memo(() => {
   const [polls, setPolls] = useState<Poll[]>([]);
   const [current, setCurrent] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -41,7 +51,7 @@ const HeroVote: React.FC = () => {
     }
   };
 
-  const handleVote = async (pollId: number, optionId: number) => {
+  const handleVote = useCallback(async (pollId: number, optionId: number) => {
     const userStr = localStorage.getItem('user');
     if (!userStr) {
       setError('Please log in to vote');
@@ -65,10 +75,10 @@ const HeroVote: React.FC = () => {
     } finally {
       setVotingStates(prev => ({ ...prev, [optionId]: false }));
     }
-  };
+  }, []);
 
-  const nextTopic = () => setCurrent((prev) => (prev + 1) % polls.length);
-  const prevTopic = () => setCurrent((prev) => (prev - 1 + polls.length) % polls.length);
+  const nextTopic = useCallback(() => setCurrent((prev) => (prev + 1) % polls.length), [polls.length]);
+  const prevTopic = useCallback(() => setCurrent((prev) => (prev - 1 + polls.length) % polls.length), [polls.length]);
 
   if (loading) {
     return (
@@ -101,16 +111,64 @@ const HeroVote: React.FC = () => {
     return poll.options.reduce((total, option) => total + option.vote_count, 0);
   };
 
+  // Get all images for display (up to 4 for good layout)
+  const getDisplayImages = (poll: Poll) => {
+    if (poll.images && poll.images.length > 0) {
+      // Sort by display_order and take up to 4 images
+      const sortedImages = [...poll.images].sort((a, b) => a.display_order - b.display_order);
+      return sortedImages.slice(0, 4);
+    }
+    if (poll.main_image_url) {
+      return [{ id: 0, image_url: poll.main_image_url, image_description: poll.title, display_order: 1 }];
+    }
+    return [{ id: 0, image_url: EXTERNAL_URLS.PLACEHOLDER_LANDSCAPE, image_description: 'Poll image', display_order: 1 }];
+  };
+
   return (
     <div className={styles.heroVoteBg}>
       <div className={styles.topicBox}>
         <h1 className={styles.topicStatement}>{currentPoll.title}</h1>
         <div className={styles.imageBox}>
-          <img 
-            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"
-            alt="poll topic" 
-            className={styles.topicImage} 
-          />
+          {(() => {
+            const displayImages = getDisplayImages(currentPoll);
+            
+            if (displayImages.length === 1) {
+              // Single image - full width
+              return (
+                <img 
+                  src={displayImages[0].image_url}
+                  alt={displayImages[0].image_description || currentPoll.title} 
+                  className={styles.topicImage} 
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = EXTERNAL_URLS.PLACEHOLDER_LANDSCAPE;
+                  }}
+                />
+              );
+            } else {
+              // Multiple images - grid layout
+              return (
+                <div className={styles.multipleImages}>
+                  {displayImages.map((image, index) => (
+                    <div key={image.id || index} className={styles.imageContainer}>
+                      <img 
+                        src={image.image_url}
+                        alt={image.image_description || `Candidate ${index + 1}`} 
+                        className={styles.candidateImage} 
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = EXTERNAL_URLS.PLACEHOLDER_LANDSCAPE;
+                        }}
+                      />
+                      {image.image_description && (
+                        <span className={styles.candidateName}>{image.image_description}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              );
+            }
+          })()}
         </div>
         <div className={styles.voteStats}>
           {currentPoll.options.map((option) => (
@@ -147,6 +205,6 @@ const HeroVote: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default HeroVote;
