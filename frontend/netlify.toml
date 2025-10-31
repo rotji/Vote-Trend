@@ -9,8 +9,8 @@
   functions = "netlify/functions"
 
 [build.environment]
-  # Node version for build
-  NODE_VERSION = "18"
+  # Node version for build - Updated to meet Vite requirements
+  NODE_VERSION = "20.19.0"
 
 [[redirects]]
   # Handle client-side routing
