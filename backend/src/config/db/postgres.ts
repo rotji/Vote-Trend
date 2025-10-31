@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import { Pool, PoolClient } from 'pg';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -34,13 +34,13 @@ const pool = new Pool({
 });
 
 // Test connection on startup
-pool.on('connect', (client) => {
+pool.on('connect', (client: PoolClient) => {
   console.log('✅ PostgreSQL client connected successfully');
   // Set a longer statement timeout for each connection
   client.query('SET statement_timeout = 30000');
 });
 
-pool.on('error', (err) => {
+pool.on('error', (err: Error) => {
   console.error('❌ PostgreSQL connection error:', err.message);
   console.error('Check your database credentials and network connection');
   // Don't exit the process, let the pool handle reconnection
