@@ -1,6 +1,7 @@
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
+import ApiTest from './components/ApiTest';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import PollList from './pages/PollList';
@@ -32,6 +33,7 @@ function App() {
               <Route path="/submit-topic" element={<SubmitTopic />} />
               <Route path="/results" element={<Results />} />
               <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/api-test" element={<ApiTest />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </ErrorBoundary>

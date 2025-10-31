@@ -27,25 +27,62 @@ pool.connect().then(() => console.log('PostgreSQL connected')).catch(console.err
 
 // Middleware
 const allowedOrigins = [
-  'http://localhost:5173', // Development
-  'http://localhost:3000', // Alternative dev port
-  process.env.FRONTEND_URL || 'https://your-frontend-app-name.netlify.app' // Production
+  'http://localhost:5173', // Development - Vite
+  'http://localhost:3000', // Development - Alternative
+  'http://localhost:4173', // Development - Vite preview
+  'https://localhost:5173', // Development - HTTPS
+  process.env.FRONTEND_URL, // Production - Set in environment
+  'https://vote-trend-frontend.netlify.app', // Production - Default Netlify pattern
+  /https:\/\/.*\.netlify\.app$/, // Any Netlify app
+  /https:\/\/.*--.*\.netlify\.app$/, // Netlify branch deploys
 ].filter(Boolean);
+
+console.log('🔒 CORS Configuration:', {
+  allowedOrigins: allowedOrigins.map(origin => 
+    origin ? (typeof origin === 'string' ? origin : origin.toString()) : 'undefined'
+  ),
+  frontendUrl: process.env.FRONTEND_URL,
+  nodeEnv: process.env.NODE_ENV
+});
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
+    console.log('🌐 CORS Request from:', origin);
     
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // Allow requests with no origin (like mobile apps, curl, Postman)
+    if (!origin) {
+      console.log('✅ CORS: Allowing request with no origin');
+      return callback(null, true);
+    }
+    
+    // Check against allowed origins
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (typeof allowedOrigin === 'string') {
+        return allowedOrigin === origin;
+      } else if (allowedOrigin instanceof RegExp) {
+        return allowedOrigin.test(origin);
+      }
+      return false;
+    });
+    
+    if (isAllowed) {
+      console.log('✅ CORS: Origin allowed');
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      console.log('❌ CORS: Origin not allowed');
+      // In development, be more permissive
+      if (process.env.NODE_ENV === 'development') {
+        console.log('🔧 Development mode: Allowing origin');
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS: Origin ${origin} not allowed`));
+      }
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
 }));
 app.use(express.json());
 
@@ -59,6 +96,19 @@ app.use('/api/images', imageRoutes);
 
 app.get('/', (req, res) => {
   res.send('Vote-Trend backend is running!');
+});
+
+// Health check endpoint with CORS info
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV,
+    corsOrigins: allowedOrigins.map(origin => 
+      origin ? (typeof origin === 'string' ? origin : origin.toString()) : 'undefined'
+    ),
+    frontendUrl: process.env.FRONTEND_URL
+  });
 });
 
 // Global error handling middleware (must be last)
