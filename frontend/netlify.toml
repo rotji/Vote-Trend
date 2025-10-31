@@ -4,16 +4,19 @@
   
   # Build command
   command = "npm run build"
+  
+  # Functions directory (if needed for serverless functions)
+  functions = "netlify/functions"
+
+[build.environment]
+  # Node version for build
+  NODE_VERSION = "18"
 
 [[redirects]]
   # Handle client-side routing
   from = "/*"
   to = "/index.html"
   status = 200
-
-[build.environment]
-  # Node version for build
-  NODE_VERSION = "18"
 
 # Headers for security and performance
 [[headers]]
@@ -28,7 +31,3 @@
   for = "/static/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-
-# Functions directory (if needed for serverless functions)
-[build]
-  functions = "netlify/functions"
