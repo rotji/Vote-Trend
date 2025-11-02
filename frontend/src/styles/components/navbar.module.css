@@ -1,25 +1,25 @@
 .navbar {
-  width: 100vw;
+  width: 100%;
+  min-width: 100vw;
   background: #6c2eb7;
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.2rem 0;
+  padding: 1.2rem 2rem;
   position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   z-index: 100;
+  margin: 0;
+  left: 0;
+  right: 0;
 }
 .logo {
   font-size: 2rem;
   font-weight: 800;
   letter-spacing: 2px;
-  margin-left: 2rem;
   font-family: 'Montserrat', 'Inter', sans-serif;
+  flex-shrink: 0;
 }
 .spacer {
   flex: 1;
@@ -27,7 +27,8 @@
 .actions {
   display: flex;
   gap: 0.8rem;
-  margin-right: 2rem;
+  flex-shrink: 0;
+  align-items: center;
 }
 
 .signupBtn {

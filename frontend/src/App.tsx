@@ -16,29 +16,42 @@ import AdminDashboard from './pages/AdminDashboard';
 import SignUp from './pages/SignUp';
 
 function App() {
+  const mainStyle = {
+    padding: window.innerWidth <= 768 ? '1rem 0.5rem' : '2rem',
+    textAlign: 'center' as const,
+    minHeight: '70vh',
+    color: '#222',
+    background: 'transparent',
+    width: '100%',
+    boxSizing: 'border-box' as const,
+    overflowX: 'hidden' as const
+  };
+
   return (
     <ErrorBoundary>
       <Router>
-        <Navbar />
-        <div style={{ padding: '2rem', textAlign: 'center', minHeight: '70vh', color: '#222', background: 'transparent' }}>
-          <ErrorBoundary>
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/polls" element={<PollList />} />
-              <Route path="/polls/:id" element={<PollDetails />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/submit-topic" element={<SubmitTopic />} />
-              <Route path="/results" element={<Results />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/api-test" element={<ApiTest />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </ErrorBoundary>
+        <div style={{ width: '100%', overflowX: 'hidden', margin: 0, padding: 0 }}>
+          <Navbar />
+          <div style={mainStyle}>
+            <ErrorBoundary>
+              <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/polls" element={<PollList />} />
+                <Route path="/polls/:id" element={<PollDetails />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/submit-topic" element={<SubmitTopic />} />
+                <Route path="/results" element={<Results />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/api-test" element={<ApiTest />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </ErrorBoundary>
+          </div>
+          <Footer />
         </div>
-        <Footer />
       </Router>
     </ErrorBoundary>
   );

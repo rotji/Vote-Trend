@@ -1,14 +1,14 @@
 .footer {
-  width: 100vw;
+  width: 100%;
   background: #23272f;
   color: #fff;
   padding: 1.5rem 0 1rem 0;
   position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  margin: 0;
   box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
+  left: 0;
+  right: 0;
+  box-sizing: border-box;
 }
 .footerContent {
   max-width: 1280px;
@@ -94,48 +94,66 @@
 }
 @media (max-width: 600px) {
   .footer {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    margin-left: 0;
-    margin-right: 0;
+    width: 100%;
+    padding: 1rem 0;
+    margin: 0;
+    left: 0;
+    right: 0;
+    box-sizing: border-box;
   }
   .footerContent {
     flex-direction: column;
     gap: 0.6rem;
     font-size: 0.9rem;
-    padding: 0 0.5rem;
+    padding: 0 1rem;
+    width: 100%;
+    box-sizing: border-box;
   }
   .businessInfo {
     margin-bottom: 0.4rem;
+    width: 100%;
   }
   .businessMessage {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     line-height: 1.4;
+    text-align: center;
+    word-wrap: break-word;
   }
   .contactInfo {
     gap: 0.4rem;
+    width: 100%;
   }
   .contactItem {
     flex-direction: column;
     gap: 0.2rem;
     text-align: center;
+    width: 100%;
   }
   .contactLabel {
     font-size: 0.8rem;
   }
   .contactLink {
     font-size: 0.85rem;
+    word-break: break-all;
   }
   .opportunities {
     margin: 0.4rem 0;
+    width: 100%;
   }
   .opportunitiesText {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     line-height: 1.3;
+    text-align: center;
+    word-wrap: break-word;
   }
   .footerNav {
-    gap: 0.7rem;
+    gap: 0.5rem;
     flex-wrap: wrap;
     justify-content: center;
+    width: 100%;
+  }
+  .footerNav a {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
   }
 }

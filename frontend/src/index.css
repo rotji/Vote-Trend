@@ -28,18 +28,26 @@ a:hover {
 
 body {
   margin: 0;
+  padding: 0;
   min-width: 0;
   min-height: 100vh;
   font-family: var(--font-family, system-ui, Avenir, Helvetica, Arial, sans-serif);
   background-color: var(--background-color, #f7f8fa);
   color: #222;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 #root {
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 h1 {
@@ -79,42 +87,76 @@ button:focus-visible {
   }
 }
 
-@media (max-width: 600px) {
-  #root {
-    width: 100vw;
-    min-width: 0;
+@media (max-width: 768px) {
+  * {
+    box-sizing: border-box;
   }
-  body {
-    font-size: 1rem;
+  
+  html, body {
+    width: 100%;
+    overflow-x: hidden;
+    margin: 0;
     padding: 0;
   }
-  h1 {
-    font-size: 1.5rem;
+  
+  #root {
+    width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
   }
+  
+  body {
+    font-size: 0.9rem;
+    padding: 0;
+  }
+  
+  h1 {
+    font-size: 1.8rem;
+    padding: 0 1rem;
+  }
+  
+  /* Global mobile fixes for navbar and footer */
   .navbar, .footer {
-    padding-left: 0.5rem !important;
-    padding-right: 0.5rem !important;
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
+    box-sizing: border-box !important;
   }
+  
+  /* Navbar mobile adjustments */
   .logo {
-    font-size: 1.2rem !important;
+    font-size: 1rem !important;
     margin-left: 0.5rem !important;
   }
+  
   .actions {
-    gap: 0.5rem !important;
+    gap: 0.3rem !important;
     margin-right: 0.5rem !important;
   }
+  
   .loginBtn, .walletBtn {
-    padding: 0.4rem 0.7rem !important;
-    font-size: 0.9rem !important;
+    padding: 0.3rem 0.6rem !important;
+    font-size: 0.8rem !important;
+    white-space: nowrap !important;
   }
+  
+  /* Footer mobile adjustments */
   .footerContent {
-    flex-direction: column !important;
-    gap: 0.2rem !important;
-    font-size: 0.9rem !important;
+    padding: 0 1rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
+  
   .footerNav {
-    gap: 0.7rem !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+  }
+  
+  .footerNav a {
+    font-size: 0.8rem !important;
+    padding: 0.2rem 0.4rem !important;
   }
 }
