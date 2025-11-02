@@ -27,9 +27,7 @@ const Navbar: React.FC = () => {
         </Link>
         <Link to="/admin" className={styles.adminLink}>Admin</Link>
         <Link to="/login" className={styles.loginBtn}>Login</Link>
-        <Link to="/signup" className={styles.signupBtn}>
-          {isMobile ? 'Join' : 'Sign Up'}
-        </Link>
+        <Link to="/signup" className={styles.signupBtn}>Sign Up</Link>
         <button className={styles.walletBtn}>
           {isMobile ? 'Wallet' : 'Connect Wallet'}
         </button>
